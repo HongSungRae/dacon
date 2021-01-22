@@ -33,6 +33,7 @@ if __name__=="__main__":
     data_loader = DataLoader(data_set, shuffle=False, batch_size=64, pin_memory=False)
     x, y, factor = next(iter(data_loader))
 
+    print("length of data loader : {}".format(len(data_loader)))
     print("x : {}".format(x.shape))
     print("y : {}".format(y.shape))
     print("factor : {}".format(factor.shape))

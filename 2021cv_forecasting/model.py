@@ -17,7 +17,8 @@ class ForecastingCNN(nn.Module):
     factor = self.cnn_channels_factor(factor) # (batch,128,5,25)
     forecasting = torch.cat([x,factor],dim=1)
     forecasting = forecasting.reshape(forecasting.shape[0],-1) # flatten
-    forecasting = self.linear(forecasting)
+    forecasting = self.linear(forecasting) # (batch, 96)
+    forecasting = forecasting.view(forecasting.shape[0],1,2,48)
     return forecasting
 
 
