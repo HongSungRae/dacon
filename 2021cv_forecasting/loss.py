@@ -13,8 +13,8 @@ class Pinball_loss(nn.Module):
 
 
 if __name__ == "__main__":
-    y = torch.randn(64,1,96)
-    y_pred = torch.randn(64,1,96)
+    y = torch.randn(64,1,2,48)
+    y_pred = torch.randn(64,1,2,48)
     quantile = 0.5
 
     criterion = Pinball_loss(quantile)

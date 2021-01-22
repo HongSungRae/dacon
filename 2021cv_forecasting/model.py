@@ -1,35 +1,32 @@
 import torch
 import torch.nn as nn
 from torchsummary import summary
-from torch.utils.data import DataLoader
-from dataloader import MyDataLoader
-
-
 
 
 class ForecastingCNN(nn.Module):
-  def __init__(self, in_channels = 1):
+  def __init__(self):
     super().__init__()
 
-    self.cnn_channels = CNN_channels()
-    self.linear = nn.Linear(in_features=16125,out_features=48)
+    self.cnn_channels_x = CNN_channels()
+    self.cnn_channels_factor = CNN_channels(in_channels=4)
+    self.linear = nn.Linear(in_features=32000,out_features=96)
 
 
-  def forward(self,x,factor=torch.zeros([2,1,5,25]).cuda()): # factor = ID + Month + Day + Week
-    x = self.cnn_channels(x)
-    x = torch.cat([x,factor],dim=1)
-    x = x.reshape(x.shape[0],-1) # flatten
-    # x = torch.flatten(x)
-    x = self.linear(x)
-    return x
+  def forward(self,x,factor=torch.zeros([2,4,7,48]).cuda()): # factor = DHI + DNI + WS + RT + T
+    x = self.cnn_channels_x(x) # (batch,128,5,25)
+    factor = self.cnn_channels_factor(factor) # (batch,128,5,25)
+    forecasting = torch.cat([x,factor],dim=1)
+    forecasting = forecasting.reshape(forecasting.shape[0],-1) # flatten
+    forecasting = self.linear(forecasting)
+    return forecasting
 
 
 class CNN_channels(nn.Module):
-  def __init__(self,dropout=.5):
+  def __init__(self,in_channels=1,dropout=.5,**kwargs):
     super().__init__()
 
-    self.horizontal_channel = horizontal()
-    self.vertical_channel = vertical()
+    self.horizontal_channel = Horizontal(in_channels=in_channels,**kwargs)
+    self.vertical_channel = Vertical(in_channels=in_channels,**kwargs)
     self.dropout = nn.Dropout(p=dropout)
 
   def forward(self,x):
@@ -40,7 +37,7 @@ class CNN_channels(nn.Module):
     return self.dropout(x)
 
 
-class horizontal(nn.Module):
+class Horizontal(nn.Module):
   def __init__(self, in_channels = 1):
     super().__init__()
 
@@ -69,7 +66,7 @@ class horizontal(nn.Module):
     return x
 
 
-class vertical(nn.Module):
+class Vertical(nn.Module):
   def __init__(self, in_channels = 1):
     super().__init__()
 
@@ -112,5 +109,11 @@ class conv_block(nn.Module):
 
 if __name__ == "__main__":
     net = ForecastingCNN().cuda()
-    print('======## ForecastingCNN Network ##======')
+    #net = Vertical().cuda()
+    #net = CNN_channels().cuda()
+    
+    print('======## Parameters of Network ##======')
     summary(net,input_size=(1,7,48))
+    x = torch.zeros(64,1,7,48).cuda()
+    factor = torch.zeros(64,4,7,48).cuda()
+    print(net(x,factor).shape)

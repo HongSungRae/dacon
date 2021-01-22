@@ -19,7 +19,7 @@ class MyDataLoader(Dataset):
         x = self.df.iloc[start:start+7*48,-1].values
         y = self.df.iloc[start+7*48:start+9*48,-1].values
         factor = self.df.iloc[start:start+7*48,3:7].values # [336,4]
-        factor = np.transpose(factor,(1,0))
+        factor = np.transpose(factor,(1,0)) # [4,336]
 
         x = torch.tensor(x).view(1,7,48)
         y = torch.tensor(y).view(1,2,48)
