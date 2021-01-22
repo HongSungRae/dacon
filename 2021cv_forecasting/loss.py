@@ -8,7 +8,6 @@ class Pinball_loss(nn.Module):
         self.quantile = quantile
 
     def forward(self,y,y_pred):
-        # if *view* is needed, code it here
         return (y-y_pred)*self.quantile if y-y_pred>=0 else (y_pred-y)*(1-self.quantile)
 
 
