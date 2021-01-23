@@ -14,7 +14,7 @@ def forecast_target():
     PATH = '/daintlab/data/sr/dacon/load_forecasting/model/'
     submission = pd.read_csv('/daintlab/data/sr/dacon/load_forecasting/sample_submission.csv')
     for quantile in range(1,10):
-        name = str(quantile*0.1)+'model.pt'
+        name = str(quantile/10)+'model.pt'
         model = call_model(PATH+name)
         
         for i in range(81): # 0<= i<= 80

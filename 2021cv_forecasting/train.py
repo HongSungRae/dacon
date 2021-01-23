@@ -52,7 +52,7 @@ def train(model,data_loader,quantile,epochs):
         
     end = time.time()
     print('>>>>>>> Learning Finished! Time taken : {} <<<<<<<<'.format(end-start))
-    PATH = '/daintlab/data/sr/dacon/load_forecasting/model'
+    PATH = '/daintlab/data/sr/dacon/load_forecasting/model/'
     NAME = str(quantile) + 'model.pt'
     torch.save(net, PATH + NAME)
 
@@ -71,15 +71,15 @@ if __name__ == "__main__":
 
     ######################
     ## hyper parameters ##
-    _quantile = 0.0 # DO NOT modify
+    _quantile = 0 # DO NOT modify
     epochs = 10
     ######################
     ######################
 
 
     for _ in range(1,10):
-        _quantile += 0.1
-        loss_list = train(model, data_loader,_quantile,epochs)
+        _quantile += 1
+        loss_list = train(model, data_loader,_quantile/10,epochs)
         loss.append(loss_list)
     else:
         global_end = time.time()
@@ -88,4 +88,4 @@ if __name__ == "__main__":
         print(loss)
         print("###############################################")
         print(">>>>>>> All training were compeleted!!! <<<<<<<")
-        print(">>>>>>> It took {} seconds <<<<<<<".format(global_start-global_end))
+        print(">>>>>>> It took {} seconds <<<<<<<".format(global_end-global_start))

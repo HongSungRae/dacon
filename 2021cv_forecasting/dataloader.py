@@ -9,12 +9,13 @@ class MyDataLoader(Dataset):
     def __init__(self,df):
         super().__init__()
         self.df = df
-        self.length = len(self.df) - 9*48 # Last 2days were used for forecasting only.
-
+        self.length = int((len(self.df) - 9*48)/48) # Last 2days were used for forecasting only.
+ 
     def __len__(self):
-        return self.length
+        return self.length # 1086
 
     def __getitem__(self,idx):
+        print(idx)
         start = idx*48
         x = self.df.iloc[start:start+7*48,-1].values
         y = self.df.iloc[start+7*48:start+9*48,-1].values
