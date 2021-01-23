@@ -3,6 +3,7 @@ import pandas as pd
 import time
 import torch
 import torch.optim as optim
+from torch.utils.data import DataLoader,Dataset
 from model import ForecastingCNN
 from loss import Pinball_loss
 from dataloader import MyDataLoader
@@ -19,7 +20,7 @@ def train(model,data_loader,quantile,epochs):
     loss_list = []
 
     net = model
-    optimizer = opim.SGD(net.parameters())
+    optimizer = optim.SGD(net.parameters(),lr=1e-3)
     criterion = Pinball_loss(quantile)
     total_batch = len(data_loader)
     print('total_batch : {}'.format(total_batch))
@@ -31,9 +32,9 @@ def train(model,data_loader,quantile,epochs):
         for i,data in enumerate(data_loader):
             x, y, factor = data
             if is_cuda:
-                x = x.cuda()
-                y = y.cuda()
-                factor = factor.cuda()
+                x = x.float().cuda()
+                y = y.float().cuda()
+                factor = factor.float().cuda()
 
             optimizer.zero_grad()
             y_hat = net(x,factor)
@@ -50,7 +51,7 @@ def train(model,data_loader,quantile,epochs):
                 loss_list.append(loss_train.item()/(total_batch%100))
         
     end = time.time()
-    print('>>>>>>> Learning Finished! Time taken : {} <<<<<<<<'.format(end-start)))
+    print('>>>>>>> Learning Finished! Time taken : {} <<<<<<<<'.format(end-start))
     PATH = '/daintlab/data/sr/dacon/load_forecasting/model'
     NAME = str(quantile) + 'model.pt'
     torch.save(net, PATH + NAME)
@@ -58,7 +59,8 @@ def train(model,data_loader,quantile,epochs):
     return loss_list
 
 
-if __nmae__ == "__main__":
+if __name__ == "__main__":
+    model = ForecastingCNN().cuda()
     global_start = time.time()
     loss = []
 

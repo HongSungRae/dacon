@@ -8,13 +8,17 @@ class Pinball_loss(nn.Module):
         self.quantile = quantile
 
     def forward(self,y,y_pred):
-        return (y-y_pred)*self.quantile if y-y_pred>=0 else (y_pred-y)*(1-self.quantile)
+        a = self.quantile*(y-y_pred)
+        b = (1-self.quantile)*(y_pred-y)
+        c = torch.max(a,b)
+        return torch.sum(c)
 
 
 if __name__ == "__main__":
+    torch.manual_seed(7)
     y = torch.randn(64,1,2,48)
     y_pred = torch.randn(64,1,2,48)
-    quantile = 0.5
+    quantile = 0.5 # 0.1~0.9
 
     criterion = Pinball_loss(quantile)
     loss = criterion(y,y_pred)
