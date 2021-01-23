@@ -46,9 +46,9 @@ def train(model,data_loader,quantile,epochs):
             if i%100 == 99:
                 loss_train = 0.0
                 print('epoch : {} , iter : {} , loss : {}'
-                        .format(eph,i+1,loss_train.item()/100))
+                        .format(eph+1,i+1,loss_train/100)) #.item()
             if i == total_batch-1:
-                loss_list.append(loss_train.item()/(total_batch%100))
+                loss_list.append(loss_train/(total_batch%100)) #.item()
         
     end = time.time()
     print('>>>>>>> Learning Finished! Time taken : {} <<<<<<<<'.format(end-start))

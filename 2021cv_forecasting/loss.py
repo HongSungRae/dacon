@@ -22,4 +22,5 @@ if __name__ == "__main__":
 
     criterion = Pinball_loss(quantile)
     loss = criterion(y,y_pred)
-    print(loss)
+    print('loss :',loss)
+    print('type :',type(loss))

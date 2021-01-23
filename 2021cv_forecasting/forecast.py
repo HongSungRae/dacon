@@ -25,6 +25,7 @@ def forecast_target():
         else:
             print('>>>>>>> Forecasting Finished <<<<<<<')
     else:
+        submission.to_csv(PATH+'sample_submission.csv')#header, index
         print('>>>>>>> Every Forecasting Finished <<<<<<<')
 
 
