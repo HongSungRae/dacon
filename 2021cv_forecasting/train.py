@@ -39,16 +39,17 @@ def train(model,data_loader,quantile,epochs):
             optimizer.zero_grad()
             y_hat = net(x,factor)
             loss = criterion(y,y_hat)
+            #print(loss)
             loss_train += loss
             loss.backward()
             optimizer.step()
 
             if i%100 == 99:
-                loss_train = 0.0
                 print('epoch : {} , iter : {} , loss : {}'
-                        .format(eph+1,i+1,loss_train/100)) #.item()
+                        .format(eph+1,i+1,loss_train.item()/100))
+                loss_train = 0.0
             if i == total_batch-1:
-                loss_list.append(loss_train/(total_batch%100)) #.item()
+                loss_list.append(loss_train.item()/(total_batch%100))
         
     end = time.time()
     print('>>>>>>> Learning Finished! Time taken : {} <<<<<<<<'.format(end-start))
@@ -66,13 +67,13 @@ if __name__ == "__main__":
 
     df = pd.read_csv('/daintlab/data/sr/dacon/load_forecasting/train/train.csv')
     data_set = MyDataLoader(df)
-    data_loader = DataLoader(data_set, shuffle=False, batch_size=64, pin_memory=False)
+    data_loader = DataLoader(data_set, shuffle=True, batch_size=64, pin_memory=False)
 
 
     ######################
     ## hyper parameters ##
     _quantile = 0 # DO NOT modify
-    epochs = 10
+    epochs = 20
     ######################
     ######################
 
@@ -88,4 +89,4 @@ if __name__ == "__main__":
         print(loss)
         print("###############################################")
         print(">>>>>>> All training were compeleted!!! <<<<<<<")
-        print(">>>>>>> It took {} seconds <<<<<<<".format(global_end-global_start))
+        print("      >>>>>>> It took {} seconds <<<<<<<".format(global_end-global_start))

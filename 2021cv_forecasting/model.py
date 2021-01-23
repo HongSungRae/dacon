@@ -9,7 +9,13 @@ class ForecastingCNN(nn.Module):
 
     self.cnn_channels_x = CNN_channels()
     self.cnn_channels_factor = CNN_channels(in_channels=4)
-    self.linear = nn.Linear(in_features=32000,out_features=96)
+    self.linear1 = nn.Linear(in_features=32000,out_features=1024)
+    self.bn1 = nn.BatchNorm1d(1024)
+    self.relu1 = nn.ReLU()
+    self.linear2 = nn.Linear(1024,256)
+    self.bn2 = nn.BatchNorm1d(256)
+    self.relu2 = nn.ReLU()
+    self.linear3 = nn.Linear(256,96)
 
 
   def forward(self,x,factor=torch.zeros([2,4,7,48]).cuda()): # factor = DHI + DNI + WS + RT + T
@@ -17,7 +23,13 @@ class ForecastingCNN(nn.Module):
     factor = self.cnn_channels_factor(factor) # (batch,128,5,25)
     forecasting = torch.cat([x,factor],dim=1)
     forecasting = forecasting.reshape(forecasting.shape[0],-1) # flatten
-    forecasting = self.linear(forecasting) # (batch, 96)
+    forecasting = self.linear1(forecasting) # (batch, 96)
+    forecasting = self.bn1(forecasting)
+    forecasting = self.relu1(forecasting)
+    forecasting = self.linear2(forecasting)
+    forecasting = self.bn2(forecasting)
+    forecasting = self.relu2(forecasting)
+    forecasting = self.linear3(forecasting)
     forecasting = forecasting.view(forecasting.shape[0],1,2,48)
     return forecasting
 
