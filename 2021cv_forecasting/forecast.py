@@ -15,7 +15,6 @@ def forecast_target():
     device = torch.device('cuda' if is_cuda else 'cpu')
     PATH = '/daintlab/data/sr/dacon/load_forecasting/model/'
     submission = pd.read_csv('/daintlab/data/sr/dacon/load_forecasting/sample_submission.csv')
-    print(type(submission))
     for quantile in range(1,10):
         name = str(quantile/10)+'model.pt'
         model = call_model(PATH+name)
@@ -30,7 +29,6 @@ def forecast_target():
             y_pred = torch.transpose(y_pred, 0, 1).detach().numpy()
             y_pred = pd.DataFrame(y_pred)
             submission.iloc[i*96:(i+1)*96,quantile] = y_pred.iloc[0:96,0]
-            print(type(submission.iloc[i*96:(i+1)*96,quantile]))
         print('>>>>>>> Forecasting Finished When quntile == {} <<<<<<<'.format(quantile/10))
     else:
         submission.to_csv(PATH+'sample_submission.csv')#header, index
