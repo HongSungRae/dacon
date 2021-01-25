@@ -7,4 +7,4 @@
 
 ## 2. 성능
     * Weighted Mean Absolute Error when quantile (0.1,0.2,...0.9)
-    <img src="https://blog.kakaocdn.net/dn/wI8Pl/btqEW35dHZu/NsFfXYcMshaVET0IBLY7Jk/img.png">
+ ![Qunatile : 0.1](https://blog.kakaocdn.net/dn/wI8Pl/btqEW35dHZu/NsFfXYcMshaVET0IBLY7Jk/img.png)
