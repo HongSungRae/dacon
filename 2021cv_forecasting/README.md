@@ -7,4 +7,4 @@
 
 ## 2. 성능
     * Weighted Mean Absolute Error when quantile (0.1,0.2,...0.9)
- ![Qunatile : 0.1](https://www.notion.so/Dacon_2021_Sunlight-Forecasting-9e474d8c303d49379bbe437e7426c762#b88d33e2d81a4ee7886baede26a59207)
+ ![image](https://user-images.githubusercontent.com/64223259/105705979-4ede1180-5f54-11eb-8eeb-f183ff194fe1.png)
