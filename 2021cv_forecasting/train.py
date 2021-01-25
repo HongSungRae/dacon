@@ -20,7 +20,7 @@ def train(model,data_loader,quantile,epochs):
     loss_list = []
 
     net = model
-    optimizer = optim.SGD(net.parameters(),lr=1e-3)
+    optimizer = optim.SGD(net.parameters(),lr=1e-4)
     criterion = Pinball_loss(quantile)
     total_batch = len(data_loader)
     print('total_batch : {}'.format(total_batch))
@@ -39,7 +39,6 @@ def train(model,data_loader,quantile,epochs):
             optimizer.zero_grad()
             y_hat = net(x,factor)
             loss = criterion(y,y_hat)
-            #print(loss)
             loss_train += loss
             loss.backward()
             optimizer.step()
@@ -73,14 +72,14 @@ if __name__ == "__main__":
     ######################
     ## hyper parameters ##
     _quantile = 0 # DO NOT modify
-    epochs = 20
+    epochs = [50,25,20,20,10,10,15,15,10]
     ######################
     ######################
 
 
-    for _ in range(1,10):
+    for i in range(1,10):
         _quantile += 1
-        loss_list = train(model, data_loader,_quantile/10,epochs)
+        loss_list = train(model, data_loader,_quantile/10,epochs[i-1])
         loss.append(loss_list)
     else:
         global_end = time.time()

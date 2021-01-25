@@ -11,7 +11,6 @@ class Pinball_loss(nn.Module):
         a = self.quantile*(y-y_pred)
         b = (1-self.quantile)*(y_pred-y)
         c = torch.max(a,b)
-        #c.requires_grad_(True)
         return torch.sum(c)
 
 
@@ -25,4 +24,3 @@ if __name__ == "__main__":
     loss = criterion(y,y_pred)
     print('loss :',loss)
     print('type :',type(loss))
-    #print(loss.requires_grad)
